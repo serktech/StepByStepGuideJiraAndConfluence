@@ -12,7 +12,7 @@ StepGuide-JiraAndConfluence.md
 2. Documentation Source for part 2: Installing Jira applications on Linux - Server 8.1 
 https://confluence.atlassian.com/adminjiraserver/installing-jira-applications-on-linux-938846841.html
 
-* This is a short crib for installing Confluence and Jira on CentOS 7 *
+*This is a short crib for installing Confluence and Jira on CentOS 7*
 
 Source: 
 http://valynkin.ru/ustanovka-atlassian-confluence-i-jira.html
