@@ -1,4 +1,5 @@
 # StepByStepGuideJiraAndConfluence
+
 ##A Step-by-Step Guide: How to install / Installing Jira applications on Linux( CentOS 7 , 7.6.1810 ) Atlassian Jira Software and Confluence, Postgres, SSL. Project Management Workflow 2019. 
 
 In this guide we'll run you through installing a Jira application in a production environment, with an external database, using the Linux installer.
@@ -12,6 +13,7 @@ StepGuide-JiraAndConfluence.md
 https://confluence.atlassian.com/adminjiraserver/installing-jira-applications-on-linux-938846841.html
 
 #Installing Atlassian Confluence and Jira on postgres and CentOS7
+
 *This is a short crib for installing Confluence and Jira on CentOS7
 
 Source: 
@@ -19,10 +21,11 @@ http://valynkin.ru/ustanovka-atlassian-confluence-i-jira.html
 https://extremeshok.com
 
 ##Confluence
+
 1. Install Postgres
 '''
 yum install postgresql-server
-sudo su - postgres -c "initdb -E UTF8 -D '/ var / lib / pgsql / data'"
+sudo su - postgres -c "initdb -E UTF8 -D '/var/lib/pgsql/data'"
 systemctl enable postgresql
 '''
 
@@ -50,11 +53,12 @@ systemctl start postgresql
 Create username and database
 '''
 sudo -u postgres createuser --no-password --no-createdb --no-superuser --no-createrole wiki
-sudo -u postgres psql -c "ALTER USER wiki WITH PASSWORD 'wacode@009';"
+sudo -u postgres psql -c "ALTER USER wiki WITH PASSWORD 'Pa$$word';"
 sudo -u postgres psql -c "CREATE DATABASE wiki WITH OWNER wiki ENCODING 'UTF8' TEMPLATE = template0;"
 '''
   
-1.Download the distribution from the site and install 
+1.Download the distribution from the site and install
+
 *(steps from Attlasian guide)
 
 Watch logs:
@@ -67,16 +71,17 @@ Rollback in case of installation errors:
 '''
 /etc/init.d/confluence stop
  sudo -u postgres dropdb wiki
- sudo -u postgres createdb wiki --encoding = UTF8 --template = template0 --owner = confluence
+ sudo -u postgres createdb wiki --encoding = UTF8 --template=template0 --owner=wiki
  rm -rf /var/atlassian/application-data/confluence/
  mkdir -p /var/atlassian/application-data/confluence/
- chown -R confluence:confluence/var/atlassian/application-data/confluence/
+ chown -R wiki:wiki/var/atlassian/application-data/confluence/
  /etc/init.d/confluence start
 '''
   
 ##Jira
 
 ###Install Postgres
+
 '''
 yum install postgresql-server
 postgresql-setup initdb
@@ -107,18 +112,18 @@ systemctl start postgresql
 Create user and database
 '''
 sudo -u postgres createuser --no-password --no-createdb --no-superuser --no-createrole djira
- sudo -u postgres psql -c "ALTER USER djira WITH PASSWORD 'dacode@009';"
+ sudo -u postgres psql -c "ALTER USER djira WITH PASSWORD 'Pa$$word';"
  sudo -u postgres psql -c "CREATE DATABASE djira WITH OWNER djira ENCODING 'UTF8' TEMPLATE = template0;"
 '''
   
 ##Download the distribution from the site and install
 
-After installation, it is necessary to add such a sink to the beginning of the 
+After installation, need to add code in the beginning of the 
 '''
 /etc/init.d/jira
 '''
- startup script, otherwise there will be question marks instead of Russian characters after the reboot:
-*optional*
+startup script, otherwise there will be question marks instead of Russian characters after the reboot:
+*optional for Russian characters*
 '''
 export JAVA_OPTS = "- Dfile.encoding = UTF-8 -Dsun.jnu.encoding = UTF-8"
 '''
@@ -141,6 +146,7 @@ Rollback in case of installation errors:
 '''
   
 #Nginx reverse proxy with SSL
+
 Create a self-signed ssl certificate
 '''
 mkdir /etc/nginx/ssl
@@ -211,7 +217,7 @@ Nginx config:
      }
  }
 '''
- 
+
 Edit server.xml files ( 
 /opt/atlassian/jira/conf/server.xml
 and
@@ -219,7 +225,7 @@ and
 ). 
 We need to add a connector that will accept ssl connections.
 
-jira:
+Jira:
  '''
 <Connector port = "8081"
 
