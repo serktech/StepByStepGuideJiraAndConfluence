@@ -153,7 +153,7 @@ Rollback in case of installation errors:
 
 ```
 mkdir /etc/nginx/ssl
-openssl req -x509 -nodes -days 9999 -newkey rsa: 2048 -keyout /etc/nginx/ssl/qqode.key -out /etc/nginx/ssl/qqode.crt
+openssl req -x509 -nodes -days 9999 -newkey rsa:2048 -keyout /etc/nginx/ssl/qqode.key -out /etc/nginx/ssl/qqode.crt
 ```
   
 Nginx config:
