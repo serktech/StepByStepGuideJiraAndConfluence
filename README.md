@@ -1,6 +1,6 @@
 # StepByStepGuideJiraAndConfluence
 
-##A Step-by-Step Guide: How to install / Installing Jira applications on Linux( CentOS 7 , 7.6.1810 ) Atlassian Jira Software and Confluence, Postgres, SSL. Project Management Workflow 2019. 
+## A Step-by-Step Guide: How to install / Installing Jira applications on Linux( CentOS 7 - 7.6.1810 ) Atlassian Jira Software and Confluence, Postgres, SSL. Project Management Workflow 2019. 
 
 In this guide we'll run you through installing a Jira application in a production environment, with an external database, using the Linux installer.
 
@@ -12,15 +12,15 @@ StepGuide-JiraAndConfluence.md
 2. Documentation Source: Installing Jira applications on Linux - Server 8.1 
 https://confluence.atlassian.com/adminjiraserver/installing-jira-applications-on-linux-938846841.html
 
-#Installing Atlassian Confluence and Jira on postgres and CentOS7
+# Installing Atlassian Confluence and Jira on postgres and CentOS 7
 
-*This is a short crib for installing Confluence and Jira on CentOS7
+* This is a short crib for installing Confluence and Jira on CentOS 7 *
 
 Source: 
 http://valynkin.ru/ustanovka-atlassian-confluence-i-jira.html
 https://extremeshok.com
 
-##Confluence
+## Confluence
 
 1. Install Postgres
 '''
@@ -59,7 +59,7 @@ sudo -u postgres psql -c "CREATE DATABASE wiki WITH OWNER wiki ENCODING 'UTF8' T
   
 1.Download the distribution from the site and install
 
-*(steps from Attlasian guide)
+*(steps from Attlasian guide)*
 
 Watch logs:
 '''
@@ -78,9 +78,9 @@ Rollback in case of installation errors:
  /etc/init.d/confluence start
 '''
   
-##Jira
+## Jira
 
-###Install Postgres
+### Install Postgres
 
 '''
 yum install postgresql-server
@@ -116,7 +116,7 @@ sudo -u postgres createuser --no-password --no-createdb --no-superuser --no-crea
  sudo -u postgres psql -c "CREATE DATABASE djira WITH OWNER djira ENCODING 'UTF8' TEMPLATE = template0;"
 '''
   
-##Download the distribution from the site and install
+## Download the distribution from the site and install
 
 After installation, need to add code in the beginning of the 
 '''
@@ -124,17 +124,20 @@ After installation, need to add code in the beginning of the
 '''
 startup script, otherwise there will be question marks instead of Russian characters after the reboot:
 *optional for Russian characters*
+
 '''
 export JAVA_OPTS = "- Dfile.encoding = UTF-8 -Dsun.jnu.encoding = UTF-8"
 '''
   
 Watch logs:
+
 '''
 tail -f /opt/atlassian/jira/logs/catalina.out
 tail -f /var/atlassian/application-data/jira/log/atlassian-jira.log
 '''
   
 Rollback in case of installation errors:
+
 '''
 /etc/init.d/jira stop
  sudo -u postgres dropdb djira
@@ -145,15 +148,16 @@ Rollback in case of installation errors:
  /etc/init.d/jira start
 '''
   
-#Nginx reverse proxy with SSL
+# Nginx reverse proxy with SSL
 
-Create a self-signed ssl certificate
+Generate a self-signed ssl certificate
 '''
 mkdir /etc/nginx/ssl
 openssl req -x509 -nodes -days 9999 -newkey rsa: 2048 -keyout /etc/nginx/ssl/qqode.key -out /etc/nginx/ssl/qqode.crt
 '''
   
 Nginx config:
+
 '''
  server {
      listen 80 ;
@@ -187,7 +191,7 @@ Nginx config:
  }
  server {
      listen 80 ;
-     server_name wiki .  yourdomain .  ru ;
+     server_name wiki.yourdomain.ru ;
 
      rewrite / https : // $ http_host $ uri permanent ;
 
@@ -197,23 +201,19 @@ Nginx config:
 
  server {
      listen 443 ssl ;
-     server_name wiki .  yourdomain .  ru ;
-
+     server_name wiki.yourdomain.ru;
      ssl_certificate / etc / nginx / ssl / domain .  crt ;
      ssl_certificate_key / etc / nginx / ssl / domain .  key ;
      ssl_protocols SSLv2 SSLv3 TLSv1 TLSv1 .  1 TLSv1 .  2 ;
      ssl_session_cache shared : SSL : 3 m ;
      ssl_session_timeout 10 m ;
-
-     access_log / var / log / nginx / wiki .  access .  log ;
-     error_log / var / log / nginx / wiki .  error .  log ;
-
-     proxy_set_header Host $ http_host ;
-     proxy_set_header X - Real - IP $ remote_addr ;
+     access_log / var / log / nginx / wiki .  access.log ;
+     error_log / var / log / nginx / wiki.error.log ;
+     proxy_set_header Host $ http_host;
+     proxy_set_header X - Real - IP $ remote_addr;
      proxy_set_header X - Forwarded - For $ remote_addr ;
-
      location / {
-         proxy_pass http : // 192 .  9  200  17 : 8091 / ;
+         proxy_pass http://192 .920017:8091/;
      }
  }
 '''
@@ -226,13 +226,12 @@ and
 We need to add a connector that will accept ssl connections.
 
 Jira:
- '''
-<Connector port = "8081"
 
+'''
+<Connector port = "8081"
                 maxThreads = "150"
                 minSpareThreads = "25"
                 connectionTimeout = "20000"
-
                 enableLookups = "false"
                 maxHttpHeaderSize = "8192"
                 protocol = "HTTP / 1.1"
@@ -240,10 +239,11 @@ Jira:
                 redirectPort = "8443"
                 acceptCount = "100"
                 disableUploadTimeout = "true"
-                scheme = "https" proxyName = "jira.yourdomain.ru" proxyPort = "443" secure = "true" />
+                scheme = "https" proxyName = "jira.yourdomain.com" proxyPort = "443" secure = "true" />
 '''
   
 Confluence:
+
 '''
 <Connector port = "8091"
             maxThreads = "48"
@@ -257,6 +257,6 @@ Confluence:
             acceptCount = "10"
             URIEncoding = "UTF-8"
             disableUploadTimeout = "true"
-            scheme = "https" proxyName = "wiki.yourdomain.ru" proxyPort = "443" secure = "true" />
+            scheme = "https" proxyName = "wiki.yourdomain.com" proxyPort = "443" secure = "true" />
 '''
   
